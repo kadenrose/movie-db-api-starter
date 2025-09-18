@@ -62,50 +62,53 @@ function getBirthYearMovies(e){
     e.preventDefault();
 
     // Get the user's input/year value
-    // TO DO
+    let year = encodeURI(document.getElementById("userYear").value);
     // the place on the page where we'll add the movies
     let birthYearMovies = document.getElementById("birthYear");
 
     if(year < 1940 || year > 2025 || year == ""){
         birthYearMovies.innerHTML = `<p style="color: red; background-color: white;">Please enter a year between 1940 and 2022</p>`;
     }else{
-        // TO DO - Build the endpoint we need (this one has additional parameters)
-        // TO DO
+        // Build the endpoint we need (this one has additional parameters)
+        let beginUrl = "https://api.themoviedb.org/3/discover/movie?api_key=e02099532e263970809c21a4f4262d5e&include_adult=false&include_video=false&language=en-US&page=1&primary_release_year=";
+        let endUrl = "&sort_by=revenue.desc";
         let imgUrl = "https://image.tmdb.org/t/p/w400";
 
         // ajax time!
         // create the object
-        // TO DO
+        let xhr = new XMLHttpRequest();
 
         // attach event handlers
-        // TO DO
+        xhr.addEventListener("readystatechange", function(){
+            if(this.readyState === this.DONE){
+                let json = this.response;
 
-        /*
-            // This code can be used for the display of the movies from the given year
-            // It skips any movies that don't include a poster
-            // currently only displays the top six movies from that year but can be adjusted
-            let counter = 0;
-            for(let i = 0; counter < 6; i++){
-                if(json.results[i].poster_path === null){
-                    continue;
-                }else{
-                    `<section class="yrMovie">
-                        <img src="${"TO DO"}" alt="">
-                        <h3>${"TO DO"}</h3>
-                    </section>`; 
-                    counter++;
+                let html = "";
+
+                let counter = 0;
+                for(let i = 0; counter < 6; i++){
+                    if(json.results[i].poster_path === null){
+                        continue;
+                    }else{
+                        html += `<section class="yrMovie">
+                            <img src="${imgUrl}${json.results[i].poster_path}" alt="${json.results[i].overview}">
+                            <h3>${json.results[i].title}</h3>
+                        </section>`; 
+                        counter++;
+                    }
                 }
+                birthYearMovies.innerHTML += html;
             }
-        */
+        });
+
         
         // set the response type
-        // TO DO
+        xhr.responseType = "json";
         // open the request
-        // TO DO
+        xhr.open("GET", `${beginUrl}${year}${endUrl}`);
         // attach the headers (optional)
-
         // send the request
-        // TO DO
+        xhr.send();
     }
 }
 
